@@ -15,7 +15,7 @@ This is a fun project that allows users to guess a number within a specific rang
 1. Install [Go](https://go.dev/).
 2. Clone this repository:
    ```bash
-   git clone https://github.com/<your-username>/number-guessing-game.git
+   git clone https://github.com/cqawam/number-guessing-game.git
    cd number-guessing-game
 3. Run the program 
    ```bash
