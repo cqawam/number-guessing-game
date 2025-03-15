@@ -1,86 +1,64 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"log"
 	"math/rand"
-	"os"
-	"strconv"
-	"strings"
 )
-var reader = bufio.NewReader(os.Stdin)
-func welcome() {
-	fmt.Println("Welcome to the Number Guessing Game!")
-	fmt.Println("I am thinking of a number between 1 and 100.")
-	fmt.Println("You have 5 chances to guess the correct number.")
-	fmt.Print("\n")
 
-	fmt.Println("Please select the difficulty level:")
-	fmt.Println("1. Easy (10 chances)")
-	fmt.Println("2. Medium (5 chances)")
-	fmt.Println("3. Hard (3 chances)")
-	fmt.Print("\n")
-}
-
-func game(chances int) {
+func game(chances int, level string) {
+	fmt.Printf("Great! You have selected the %s difficulty level.\nLet's start the game!\n\n", level)
 	randomNumber := rand.Intn(100) + 1
-
+	success := false
+outer:
 	// Loop for the number of chances according to level
 	for i := 1; i <= chances; i++ {
+		var guess int
 		fmt.Print("Enter your guess: ")
-		input, err := reader.ReadString('\n')
-		if err != nil {
-			log.Fatal()
-		}
-		input = strings.TrimSpace(input)
-		guess, err := strconv.Atoi(input)
-		if err != nil {
-			log.Fatal()
-		}
+		fmt.Scanf("%d", &guess)
 
-		if guess > randomNumber {
+		switch {
+		case guess == randomNumber:
+			success = true
+			fmt.Printf("Congratulations! You guessed the correct number in %d attempts\n", i)
+			break outer
+		case guess > randomNumber:
 			fmt.Printf("Incorrect! The number is less than %d\n\n", guess)
 			continue
-		} else if guess < randomNumber {
+		case guess < randomNumber:
 			fmt.Printf("Incorrect! The number is greater than %d\n\n", guess)
 			continue
-		} else {
-			fmt.Printf("Congratulations! You guessed the correct number in %d attempts\n", i)
-			break
 		}
+
 	}
-	fmt.Printf("Sorry, you're out of chances! The correct number was %d.\n", randomNumber)
+	if !success {
+		fmt.Printf("Sorry, you're out of chances! The correct number was %d.\n", randomNumber)
+	}
 }
 
 func main() {
-	welcome()
+	welcome := `Welcome to the Number Guessing Game!
+I am thinking of a number between 1 and 100.
+You have a number of chances to guess the correct number.
 
+Please select the difficulty level:
+1. Easy (10 chances)
+2. Medium (5 chances)
+3. Hard (3 chances)
+
+`
+	fmt.Println(welcome)
 	// Get the difficulty level from console input
+	var level int
 	fmt.Print("Enter your choice: ")
-	level, _, err := reader.ReadRune()
-	if err != nil {
-		log.Fatal()
-	}
-	// Discard leftover input
-	reader.ReadString('\n')
-
+	fmt.Scanf("%d", &level)
 	switch level {
-	case '1':
-		fmt.Println("Great! You have selected the Easy difficulty level.")
-		fmt.Print("Let's start the game!\n\n")
-		game(10)
-	case '2':
-		fmt.Println("Great! You have selected the Medium difficulty level.")
-		fmt.Print("Let's start the game!\n\n")
-		game(5)
-	case '3':
-		fmt.Println("Great! You have selected the Hard difficulty level.")
-		fmt.Print("Let's start the game!\n\n")
-		game(3)
+	case 1:
+		game(10, "Easy")
+	case 2:
+		game(5, "Medium")
+	case 3:
+		game(3, "Hard")
 	default:
 		fmt.Println("Incorrect difficulty level")
 	}
-
-	// Implement the game function with each difficulty.
 }
